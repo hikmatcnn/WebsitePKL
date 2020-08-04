@@ -1,51 +1,86 @@
-import React from 'react';
-import { Card, Row, Col } from 'reactstrap';
 
-const SimplePatner = (props) => {
-    return (
-        <div className="py-5 my-5 bg-secondary" id="patnership">
-          <div className="container">
-            <div className="px-0 col-lg-8 col-md-10 col-sm-12 mx-auto text-center pb-2">
-              <h2 className="display-5 text-light">
-                Sekolah yg telah PKL di UPTD Tikomdik
+import React, {
+  useState,
+  useEffect
+} from 'react';
+import "bootstrap/dist/css/bootstrap.css";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import '../css/SimpleTemp.css';
+import Slider from "react-slick";
+
+
+function SimplePatner() {
+  const [suggestions, setSuggestions] = useState([])
+
+
+  useEffect(() => {
+    fetch('https://jsonplaceholder.typicode.com/users').then(res => res.json()).then(data => {
+      setSuggestions(data);
+    })
+  });
+
+  let settings = {
+    infinite: false,
+    speed: 1000,
+    arrows: true,
+    slidesToShow: 5,
+    slidesToScroll: 4,
+
+    responsive: [
+      {
+        breakpoint: 960,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 2
+        }
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 2
+        }
+      }
+    ]
+  }
+  return (
+    <div className="py-5 my-5 bg-secondary" id="patnership">
+      <div className="container">
+        <div className="px-0 col-lg-8 col-md-10 col-sm-12 mx-auto text-center pb-2">
+          <h2 className="display-5 text-light">
+            Sekolah yg telah PKL di UPTD Tikomdik
               </h2>
-             
+          {suggestions.length === 0 ? (
+            <div className="spinner-border" role="status">
+              <span className="sr-only">Loading...</span>
             </div>
-            <div className="container-fluid">
-      
-              <div className="mt-4 text-center d-flex flex-row flex-wrap justify-content-center ">
-                <Row>
-                <Col xl="4" lg="6">
-          
-            <div className="card-img-wrapper mx-auto w-50">
-              <img src="https://smkn11bdg.sch.id/wp-content/uploads/2019/08/logo.png" className="card-img-top rounded" alt="..." />
-            </div>
-            
-          
-        </Col>
-        <Col xl="4" lg="6">
-          
-             <div className="card-img-wrapper mx-auto w-50">
-              <img src="https://www.smkn1-cmi.sch.id/wp-content/uploads/2017/05/logo-e1494606597209.png" className="card-img-top rounded" alt="..." />
-            </div>
-            
-          
-        </Col>
-        <Col xl="4" lg="12">
-          
-             <div className="card-img-wrapper mx-auto w-50">
-              <img src="http://foto2.data.kemdikbud.go.id/getImage/20203874/10.jpg" className="card-img-top rounded" alt="..." />
-            </div>
-            
-          
-        </Col>
-                </Row>
-              </div>
-            </div>
-          </div>
-        </div>
+          ) : (
+              <Slider {...settings}>
+                {suggestions.map(current => (
+                  <div className="out" key={current.id}>
+                    <div className="cardTemp">
+                      <img className="rounded-circle" alt={"users here"} src={`https://source.unsplash.com/random/${current.id}`} height={56} width={56} />
+                      <div className="card-body">
+                        <h5 className="card-title">{current.username}</h5>
+                        <small className="card-text text-sm-center text-muted">In your contacts</small>
+                        <br />
 
-    );
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </Slider>
+            )}
+
+
+
+
+        </div>
+      </div>
+    </div>
+
+  );
 };
 
 export default SimplePatner;
